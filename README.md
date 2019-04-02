@@ -5,12 +5,13 @@ Simply invoke the provided Makefile to build the templater
 Basic usage:
 
 ```
-./templater <template> <manifest>
+./templater <template> <manifest> [output dir]
 ```
 
  * `template`: Path to an MD380 codeplug to read as the template file.
  * `manifest`: Path to a text file containing `<Radio ID> <Radio Name>`
     records, one per line. `<Radio ID>` must be a 24-bit unsigned integer.
-    `<Radio Name>` is a maximum 16-char string.
-
-The generated codeplugs are placed into the current working directory.
+    `<Radio Name>` is a maximum 16-char string. These are used to create
+    individual codeplugs and also build a contact list.
+ * `output dir` (optional) Specifies an output directory for the generated
+    codeplugs. If omitted, the current working directory is used.

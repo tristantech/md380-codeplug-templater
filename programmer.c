@@ -21,15 +21,24 @@ int main(int argc, char **argv) {
 
     /* We are given a template codeplug and manifest as input. Check them. */
     if(argc < 3) {
-        fprintf(stderr, "Usage: %s <template> <manifest>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <template> <manifest> [output dir]\n", argv[0]);
         return 1;
     }
-    
+
     if(!strstr(argv[1], ".rdt")) {
     	fprintf(stderr, "Error: Codeplug file does not end in .rdt\nDid you swap the arguments?\n");
     	return 1;
     }
-    
+
+    char *output_dir;
+    if(argc >= 4) {
+        // User specified an output directory.
+        output_dir = argv[3];
+    } else {
+        // Use working dir if unspecified.
+        output_dir = ".";
+    }
+
     int f_cp;
     if(access(argv[1], R_OK) < 0 || (f_cp = open(argv[1], O_RDONLY)) < 0) {
         fprintf(stderr, "Cannot open file %s.\n", argv[1]);
@@ -71,9 +80,9 @@ int main(int argc, char **argv) {
         if (length < 0) {
             break; /* No more lines or failure */
         }
-        
+
         memset(manifest[manifest_rows].radio_name, '\0', RADIO_NAME_LEN+1);
-        
+
         int res = sscanf(line, "%u %16s", &manifest[manifest_rows].radio_id, manifest[manifest_rows].radio_name);
         if(res == EOF || res < 2) {
             fprintf(stderr, "Error reading line %s", line);
@@ -81,9 +90,9 @@ int main(int argc, char **argv) {
             continue;
         }
         free(line);
-        
+
         manifest_rows++;
-        
+
         if(manifest_rows == manifest_size) {
         	// Expand the array
         	manifest_size += 10;
@@ -100,7 +109,7 @@ int main(int argc, char **argv) {
 	/* Insert contacts -- seek to first available slot*/
 	struct digcontact *contact = CP_DIGCONTACT_PTR(cp);
 	for( ; CP_DIGCONTACT_DEFINED(*contact); contact++ );
-	
+
 	for(int i=0; i < manifest_rows; i++) {
 		// Create a new Digital Contact
 		contact->call_config = 0xC2;
@@ -110,9 +119,9 @@ int main(int argc, char **argv) {
 	}
 
 	/* Begin provisioning individual codeplugs */
-	
+
     uint32_t radio_id;
-    char filename[128];
+    char filename[4096];
     char radio_name[RADIO_NAME_LEN+1];
     int count = 0;
 
@@ -126,7 +135,7 @@ int main(int argc, char **argv) {
 
         /* Write out new file */
         memset(filename, '\0', sizeof(filename));
-        snprintf(filename, sizeof(filename), "codeplug_%s.rdt", manifest[i].radio_name);
+        snprintf(filename, sizeof(filename), "%s/codeplug_%s.rdt", output_dir, manifest[i].radio_name);
 
         FILE *f_out = fopen(filename, "w");
         if(f_out == NULL) {
@@ -142,7 +151,7 @@ int main(int argc, char **argv) {
 
         count++;
     }
-    
+
     printf("Done. Processed %d lines.\n", count);
 
     return 0;

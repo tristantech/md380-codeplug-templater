@@ -25,7 +25,7 @@ void codeplug_str_print(uint16_t *str) {
 void codeplug_id(uint8_t *dest, uint32_t id) {
     dest[0] = (id >>  0) & 0xFF;
     dest[1] = (id >>  8) & 0xFF;
-    dest[2] = (id >> 16) & 0xFF; 
+    dest[2] = (id >> 16) & 0xFF;
 }
 
 int id_to_int(uint8_t *id) {
@@ -44,12 +44,12 @@ int codeplug_strcmp(uint16_t *str1, const char *str2) {
 int bcd_freq_to_int(uint32_t bcd) {
 	int freq = 0;
 	int place = 1;
-	
+
 	for(int i = 0; i < 2*sizeof(bcd); i++) {
 		freq += (bcd & 0xF)*place;
 		place *= 10;
 		bcd >>= 4;
 	}
-	
+
 	return freq*10;
 }
