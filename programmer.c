@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
         memset(manifest[manifest_rows].radio_name, '\0', RADIO_NAME_LEN+1);
 
-        int res = sscanf(line, "%u %16s", &manifest[manifest_rows].radio_id, manifest[manifest_rows].radio_name);
+        int res = sscanf(line, "%u %16[-_. a-zA-Z0-9]", &manifest[manifest_rows].radio_id, manifest[manifest_rows].radio_name);
         if(res == EOF || res < 2) {
             fprintf(stderr, "Error reading line %s", line);
             free(line);
