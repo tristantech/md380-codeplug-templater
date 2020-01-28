@@ -1,0 +1,16 @@
+# Ignored line
+110s Broken Name
+1000
+1001 
+
+ 
+  
+          
+
+1002 Sixteen789ABCDEF
+1003 Toolongtoolongtoolong
+-1 Negative
+0 Zero
+16777216 AboveMax
+16777215 Max
+1004 S p a c e s

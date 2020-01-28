@@ -1,3 +1,5 @@
+*.DS_Store
 *.o
 templater
-test/*
+*.vscode/*
+test/codeplug_*.rdt
